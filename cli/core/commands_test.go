@@ -2,8 +2,6 @@ package core
 
 import (
 	"bytes"
-	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/spf13/cobra"
@@ -34,42 +32,7 @@ func ExecuteTestCommand(cmdGetter CliCommandFunction, args ...string) CliRunResu
 	}
 }
 
-func TestPingCommandDefaultsSuccess(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	}))
-	defer server.Close()
-
-	output := ExecuteTestCommand(GetRunCommnd, server.URL)
-	assert.NoError(t, output.Error, "Unexpected error while executing ping command")
-}
-
-func TestPingCommandMultipleCallsSuccess(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	}))
-	defer server.Close()
-
-	output := ExecuteTestCommand(GetRunCommnd, server.URL, "--count", "10")
-	assert.NoError(t, output.Error, "Unexpected error while executing ping command")
-	assert.Contains(t, output.ShellOutput, "Got 10 of 10 pings successful")
-}
-
-func TestPingCommandServerError(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusInternalServerError)
-	}))
-	defer server.Close()
-
-	output := ExecuteTestCommand(GetRunCommnd, server.URL, "--count", "1", "--timeout", "1")
-	assert.NoError(t, output.Error, "Unexpected error while executing ping command")
-}
-
-func TestPingCommandUnreachable(t *testing.T) {
-	server := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusInternalServerError)
-	}))
-
-	output := ExecuteTestCommand(GetRunCommnd, server.URL, "--count", "1", "--timeout", "1")
-	assert.ErrorContains(t, output.Error, "Failed to reach target")
+func TestRunCommandDefaultSuccess(t *testing.T) {
+	output := ExecuteTestCommand(GetRunCommnd, "test", "-f", "./resources/simple.yaml")
+	assert.NoError(t, output.Error, "Unexpected error while executing run command")
 }

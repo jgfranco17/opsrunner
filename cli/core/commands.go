@@ -13,12 +13,12 @@ func GetRunCommnd() *cobra.Command {
 	var filePath string
 	cmd := &cobra.Command{
 		Use:   "run",
-		Short: "Ping a target URL",
-		Long:  "Check if a target URL is live and responds with a 2xx status code",
+		Short: "Run a task",
+		Long:  "Read the config file and run a task",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
-				return fmt.Errorf("Not enough arguments, expected 1 but got %d", len(args))
+				return fmt.Errorf("Too many arguments, expected 1 but got %d", len(args))
 			}
 
 			ctx, cancel := context.WithCancel(context.Background())
