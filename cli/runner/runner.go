@@ -1,10 +1,12 @@
 package runner
 
 import (
+	"cli/outputs"
 	"context"
 	"fmt"
 	"os"
 	"os/exec"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -35,12 +37,17 @@ type Task struct {
 }
 
 func (t *Task) Run() error {
-	for envVarible, value := range t.Env {
-		fmt.Printf("%s=%s\n", envVarible, value)
+	if len(t.Env) > 0 {
+		fmt.Println("Using env:")
+		for envVarible, value := range t.Env {
+			fmt.Printf("%s=%s\n", envVarible, value)
+		}
 	}
+	fmt.Println("===================================")
 
+	startTime := time.Now()
 	for idx, step := range t.Steps {
-		fmt.Printf("[%d / %d] Running: %s %s\n", idx+1, len(t.Steps), step.Command, step.Args)
+		fmt.Printf("[%d] %s %s\n", idx+1, step.Command, step.Args)
 		cmdExec := exec.Command(step.Command, step.Args)
 		output, err := cmdExec.Output()
 		if err != nil {
@@ -48,6 +55,8 @@ func (t *Task) Run() error {
 		}
 		fmt.Println(string(output))
 	}
+	duration := time.Since(startTime)
+	outputs.PrintColoredMessage("green", "OK", "Ran %d tasks in %d ms", len(t.Steps), duration.Milliseconds())
 	return nil
 }
 
