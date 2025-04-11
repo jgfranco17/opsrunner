@@ -1,0 +1,41 @@
+name: Docker Integration
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: "latest"
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg VERSION=0.0.0-img \
+            --no-cache \
+            -t opsrunner:dev .
+          sleep 3
+          docker image ls
+
+      - name: Run CLI image
+        run: |
+          docker run --rm opsrunner:dev --version
+
+      - name: Clean up
+        run: |
+          TARGET=$(docker images | grep "opsrunner" | awk "{print \$3}")
+          docker rmi "${TARGET}" --force

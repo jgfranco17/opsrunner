@@ -15,7 +15,7 @@ RUN go mod download all \
 
 # APP STAGE
 
-FROM alpine:3.18 AS app-stage
+FROM alpine:3.21 AS app-stage
 
 RUN --mount=type=cache,target=/var/cache/apk \
     apk --update add ca-certificates tzdata \
