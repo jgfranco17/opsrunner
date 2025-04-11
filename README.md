@@ -1,6 +1,6 @@
-# OpsRunner API
+# OpsRunner CLI
 
-_Ensuring your APIs stand the test of time._
+_DevOps on local, simplified._
 
 ![STATUS](https://img.shields.io/badge/status-active-brightgreen?style=for-the-badge)
 ![LICENSE](https://img.shields.io/badge/license-BSD3-blue?style=for-the-badge)
@@ -11,20 +11,15 @@ _Ensuring your APIs stand the test of time._
 
 ### About
 
-OpsRunner API is a lightweight SaaS tool designed to continuously test API availability
-and correctness. With a simple configuration, users can define their API endpoints,
-expected HTTP status codes, and response times, ensuring their services remain operational
-without manual monitoring.
+OpsRunner is a powerful, user-friendly Command-Line Interface (CLI) tool tailored for
+CI/CD pipelines and build management. Designed to simplify the orchestration of complex
+build processes, OpsRunner offers a structured and reliable alternative to traditional
+scripting. By leveraging project specifications defined in YAML files, this tool empowers
+developers to streamline repetitive tasks and enhance automation across various
+environments.
 
-### API
-
-Check out the [documentation page](https://jgfranco17.github.io/opsrunner-api/) for more
-information about using the API.
-
-### CLI
-
-To run OpsRunner locally, we also provide a CLI tool. This allows you to run your API tests
-llocally (from your local machine) or remotely (via request to the API).
+Whether you're running a local build or deploying to production, OpsRunner makes it easier
+to achieve consistency, traceability, and scalability in your workflows.
 
 To download the CLI, an install script has been provided.
 

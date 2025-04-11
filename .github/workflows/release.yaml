@@ -68,9 +68,9 @@ jobs:
           gh release create "${{ env.VERSION }}" \
             release/opsrunner-${{ env.VERSION }}-linux-amd64.tar.gz \
             release/opsrunner-${{ env.VERSION }}-darwin-amd64.tar.gz \
-            --notes-file ".github/release/${{ env.VERSION }}.md"
+            --notes-file ".github/releases/${{ env.VERSION }}.md"
 
       - name: Create release job summary
         if: success()
         run: |
-          cat .github/release/${{ env.VERSION }}.md >> $GITHUB_STEP_SUMMARY
+          cat .github/releases/${{ env.VERSION }}.md >> $GITHUB_STEP_SUMMARY
