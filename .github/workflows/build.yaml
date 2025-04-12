@@ -42,4 +42,8 @@ jobs:
             -o ./opsrunner \
             main.go
           chmod +x ./opsrunner
+
+      - name: Run binary
+        run: |
           ./opsrunner --version
+          ./opsrunner --help

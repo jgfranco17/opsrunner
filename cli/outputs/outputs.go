@@ -2,9 +2,11 @@ package outputs
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/fatih/color"
+	"golang.org/x/term"
 )
 
 func PrintColoredMessage(textColor string, source string, message string, args ...any) {
@@ -38,4 +40,17 @@ func PrintError(text string, args ...any) {
 	red := color.New(color.FgRed).SprintFunc()
 	message := fmt.Sprintf(text, args...)
 	fmt.Printf("[%s] %s\n", red("ERROR"), message)
+}
+
+func PrintTerminalWideLine(char string) {
+	width, _, err := term.GetSize(int(os.Stdout.Fd()))
+	if err != nil {
+		// fallback to default width
+		width = 40
+	}
+	line := ""
+	for i := 0; i < width; i++ {
+		line += string(char)
+	}
+	fmt.Println(line)
 }

@@ -25,3 +25,24 @@ func TestLoadConfigFail_InvalidYamlSchema(t *testing.T) {
 	assert.ErrorContains(t, err, "Failed to unmarshal YAML")
 	assert.Empty(t, config)
 }
+
+func TestStepExecOk(t *testing.T) {
+	step := Step{
+		Command: "echo",
+		Args:    "hello",
+	}
+	exitCode, output, err := step.Exec()
+	assert.Equal(t, 0, exitCode)
+	assert.NoError(t, err)
+	assert.Contains(t, output, "hello")
+}
+
+func TestStepFailOk(t *testing.T) {
+	step := Step{
+		Command: "exit",
+		Args:    "",
+	}
+	exitCode, _, err := step.Exec()
+	assert.Equal(t, -1, exitCode)
+	assert.Error(t, err)
+}

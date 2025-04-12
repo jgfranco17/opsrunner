@@ -32,7 +32,7 @@ func GetRunCommnd() *cobra.Command {
 			if !ok {
 				return fmt.Errorf("No such task: %s", taskName)
 			}
-			err = taskToRun.Run()
+			err = taskToRun.Run(ctx)
 			if err != nil {
 				return err
 			}

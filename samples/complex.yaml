@@ -1,0 +1,13 @@
+---
+repo_url: www.github.com
+tasks:
+  test:
+    description: Hello World
+    category: test
+    env:
+      IS_TEST: "true"
+    steps:
+      - cmd: ls
+        args: -la
+      - cmd: echo
+        args: "Hello World!"
