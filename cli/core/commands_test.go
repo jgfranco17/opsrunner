@@ -2,6 +2,7 @@ package core
 
 import (
 	"bytes"
+	"cli/runner"
 	"testing"
 
 	"github.com/spf13/cobra"
@@ -18,9 +19,10 @@ type CliRunResult struct {
 }
 
 // Helper function to simulate CLI execution
-func ExecuteTestCommand(cmdGetter CliCommandFunction, args ...string) CliRunResult {
+func ExecuteTestCommand(t *testing.T, cmd *cobra.Command, args ...string) CliRunResult {
+	t.Helper()
+
 	buf := new(bytes.Buffer)
-	cmd := cmdGetter()
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
 	cmd.SetArgs(args)
@@ -33,6 +35,7 @@ func ExecuteTestCommand(cmdGetter CliCommandFunction, args ...string) CliRunResu
 }
 
 func TestRunCommandDefaultSuccess(t *testing.T) {
-	output := ExecuteTestCommand(GetRunCommnd, "test", "-f", "./resources/simple.yaml")
-	assert.NoError(t, output.Error, "Unexpected error while executing run command")
+	mockExecutor := runner.NewMockExecutor(1).WithStep("some-command", "--arg value", 0, "Ran some-command!", nil)
+	result := ExecuteTestCommand(t, GetRunCommand(mockExecutor), "test", "-f", "./resources/simple.yaml")
+	assert.NoError(t, result.Error, "Unexpected error while executing run command")
 }

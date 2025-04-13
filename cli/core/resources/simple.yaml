@@ -7,7 +7,5 @@ tasks:
     env:
       IS_TEST: "true"
     steps:
-      - cmd: ls
-        args: -la
-      - cmd: echo
-        args: "Hello World!"
+      - cmd: some-command
+        args: --arg value

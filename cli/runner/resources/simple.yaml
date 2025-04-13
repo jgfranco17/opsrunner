@@ -9,5 +9,3 @@ tasks:
     steps:
       - cmd: ls
         args: -la
-      - cmd: echo
-        args: "Hello World!"

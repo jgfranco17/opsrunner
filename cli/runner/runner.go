@@ -5,11 +5,14 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"time"
 
 	"gopkg.in/yaml.v3"
 )
+
+type ShellExecutor interface {
+	Exec(ctx context.Context, name string, args string) (int, string, error)
+}
 
 type OpsRunnerConfig struct {
 	RepoUrl string          `yaml:"repo_url"`
@@ -34,18 +37,6 @@ type Step struct {
 	Args    string `yaml:"args,omitempty"`
 }
 
-func (s *Step) Exec() (int, string, error) {
-	cmd := exec.Command(s.Command, s.Args)
-	output, err := cmd.Output()
-	if err != nil {
-		if exitErr, ok := err.(*exec.ExitError); ok {
-			return exitErr.ExitCode(), string(output), exitErr
-		}
-		return -1, "", err
-	}
-	return 0, string(output), nil
-}
-
 type Task struct {
 	Description string            `yaml:"description,omitempty"`
 	Category    string            `yaml:"category,omitempty"`
@@ -53,7 +44,7 @@ type Task struct {
 	Steps       []Step            `yaml:"steps"`
 }
 
-func (t *Task) Run(ctx context.Context) error {
+func (t *Task) Run(ctx context.Context, executor ShellExecutor) error {
 	if len(t.Env) > 0 {
 		restoreFunc, err := WithTempEnv(ctx, t.Env)
 		if err != nil {
@@ -66,8 +57,8 @@ func (t *Task) Run(ctx context.Context) error {
 	startTime := time.Now()
 	for idx, step := range t.Steps {
 		fmt.Printf("[%d] %s %s\n", idx+1, step.Command, step.Args)
-		exitCode, output, err := step.Exec()
-		if err != nil {
+		exitCode, output, err := executor.Exec(ctx, step.Command, step.Args)
+		if err != nil || exitCode != 0 {
 			return fmt.Errorf("Error while running '%s' (exit code %d): %w", step.Command, exitCode, err)
 		}
 		fmt.Println(string(output))

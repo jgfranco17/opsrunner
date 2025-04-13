@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"cli/core"
+	"cli/executor"
 	"cli/logging"
 )
 
@@ -23,8 +24,9 @@ func init() {
 }
 
 func main() {
+	executor := executor.CommandExecutor{}
 	commandsList := []*cobra.Command{
-		core.GetRunCommnd(),
+		core.GetRunCommand(executor),
 	}
 	command := core.NewCommandRegistry(projectName, projectDescription, version)
 	command.RegisterCommands(commandsList)

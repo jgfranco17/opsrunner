@@ -9,7 +9,11 @@ import (
 	"cli/runner"
 )
 
-func GetRunCommnd() *cobra.Command {
+type ShellExecutor interface {
+	Exec(ctx context.Context, name string, args string) (int, string, error)
+}
+
+func GetRunCommand(shellExecutor ShellExecutor) *cobra.Command {
 	var filePath string
 	cmd := &cobra.Command{
 		Use:   "run",
@@ -32,7 +36,7 @@ func GetRunCommnd() *cobra.Command {
 			if !ok {
 				return fmt.Errorf("No such task: %s", taskName)
 			}
-			err = taskToRun.Run(ctx)
+			err = taskToRun.Run(ctx, shellExecutor)
 			if err != nil {
 				return err
 			}

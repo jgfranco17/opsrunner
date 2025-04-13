@@ -2,6 +2,7 @@ package runner
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -27,22 +28,37 @@ func TestLoadConfigFail_InvalidYamlSchema(t *testing.T) {
 }
 
 func TestStepExecOk(t *testing.T) {
-	step := Step{
-		Command: "echo",
-		Args:    "hello",
+	task := Task{
+		Description: "A simple test task",
+		Env:         make(map[string]string),
+		Category:    "",
+		Steps: []Step{
+			{
+				Command: "some-command",
+				Args:    "--arg value",
+			},
+		},
 	}
-	exitCode, output, err := step.Exec()
-	assert.Equal(t, 0, exitCode)
+	mockExecutor := NewMockExecutor(1).WithStep("some-command", "--arg value", 0, "Ran some-command!", nil)
+	err := task.Run(context.Background(), mockExecutor)
 	assert.NoError(t, err)
-	assert.Contains(t, output, "hello")
+	assert.True(t, mockExecutor.IsCalled())
 }
 
-func TestStepFailOk(t *testing.T) {
-	step := Step{
-		Command: "exit",
-		Args:    "",
+func TestStepExecWithStepError(t *testing.T) {
+	task := Task{
+		Description: "A simple test task",
+		Env:         make(map[string]string),
+		Category:    "",
+		Steps: []Step{
+			{
+				Command: "some-command",
+				Args:    "--arg value",
+			},
+		},
 	}
-	exitCode, _, err := step.Exec()
-	assert.Equal(t, -1, exitCode)
-	assert.Error(t, err)
+	mockExecutor := NewMockExecutor(1).WithStep("some-command", "--arg value", 1, "Something went wrong!", fmt.Errorf("Some error"))
+	err := task.Run(context.Background(), mockExecutor)
+	assert.True(t, mockExecutor.IsCalled())
+	assert.ErrorContains(t, err, "Error while running 'some-command' (exit code 1)")
 }
