@@ -33,3 +33,9 @@ build-bin:
 docker-build:
     docker build --build-arg VERSION=0.0.0-img --no-cache -t opsrunner:dev .
     @echo "Built OpsRunner image successfully!"
+
+# Generate CLI documentation
+generate-docs directory="docs":
+    #!/usr/bin/env bash
+    just cli docs {{ directory }}
+    find {{ directory }} -name '*completion*' -exec rm -f {} \;

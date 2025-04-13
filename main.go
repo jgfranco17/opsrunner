@@ -25,10 +25,11 @@ func init() {
 
 func main() {
 	executor := executor.CommandExecutor{}
+	command := core.NewCommandRegistry(projectName, projectDescription, version)
 	commandsList := []*cobra.Command{
 		core.GetRunCommand(executor),
+		core.GetGenerateDocsCommand(command.GetMain()),
 	}
-	command := core.NewCommandRegistry(projectName, projectDescription, version)
 	command.RegisterCommands(commandsList)
 
 	err := command.Execute()

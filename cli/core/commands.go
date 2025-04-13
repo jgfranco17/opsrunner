@@ -48,3 +48,22 @@ func GetRunCommand(shellExecutor ShellExecutor) *cobra.Command {
 	cmd.Flags().StringVarP(&filePath, "file", "f", "opsrunner.yaml", "OpsRunner definition file")
 	return cmd
 }
+
+func GetGenerateDocsCommand(rootCmd *cobra.Command) *cobra.Command {
+	var outputDirPath string
+	cmd := &cobra.Command{
+		Use:   "docs",
+		Short: "Generate CLI documentation",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := GenerateDocs(rootCmd, outputDirPath); err != nil {
+				return fmt.Errorf("could not generate CLI docs: %w", err)
+			}
+			return nil
+		},
+		Hidden:        true,
+		SilenceUsage:  true,
+		SilenceErrors: true,
+	}
+	cmd.Flags().StringVarP(&outputDirPath, "output", "o", "docs", "Output directory")
+	return cmd
+}

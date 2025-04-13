@@ -42,6 +42,10 @@ func NewCommandRegistry(name string, description string, version string) *Comman
 	return newRegistry
 }
 
+func (cr *CommandRegistry) GetMain() *cobra.Command {
+	return cr.rootCmd
+}
+
 // RegisterCommand registers a new command with the CommandRegistry
 func (cr *CommandRegistry) RegisterCommands(commands []*cobra.Command) {
 	for _, cmd := range commands {
