@@ -4,12 +4,6 @@ PROJECT_NAME := "opsrunner"
 _default:
     @just --list --unsorted
 
-# Execute unit tests
-test:
-    @echo "Running unit tests!"
-    go clean -testcache
-    go test -cover ./cli/...
-
 # Sync Go modules
 tidy:
     cd cli && go mod tidy
@@ -19,6 +13,19 @@ tidy:
 # CLI local run wrapper
 cli *args:
     @go run main.go {{ args }}
+
+# Execute unit tests
+test:
+    @echo "Running unit tests!"
+    go clean -testcache
+    go test -cover ./cli/...
+
+# Run coverage and open a report
+view-coverage:
+    go clean -testcache
+    go test -coverpkg="./cli/..." -coverprofile="coverage.out" -covermode="count" ./cli/...
+    go tool cover -html="coverage.out" -o coverage.html
+    xdg-open coverage.html
 
 # Build CLI binary
 build-bin:
