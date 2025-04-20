@@ -39,3 +39,15 @@ func TestRunCommandDefaultSuccess(t *testing.T) {
 	result := ExecuteTestCommand(t, GetRunCommand(mockExecutor), "test", "-f", "./resources/simple.yaml")
 	assert.NoError(t, result.Error, "Unexpected error while executing run command")
 }
+
+func TestRunCommandFail_TooManyArguments(t *testing.T) {
+	mockExecutor := runner.NewMockExecutor(0)
+	result := ExecuteTestCommand(t, GetRunCommand(mockExecutor), "test", "another", "test")
+	assert.ErrorContains(t, result.Error, "accepts 1 arg(s), received 3")
+}
+
+func TestRunCommandFail_InvalidTaskName(t *testing.T) {
+	mockExecutor := runner.NewMockExecutor(0)
+	result := ExecuteTestCommand(t, GetRunCommand(mockExecutor), "non-existent", "-f", "./resources/simple.yaml")
+	assert.ErrorContains(t, result.Error, "No such task: non-existent")
+}
