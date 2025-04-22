@@ -6,9 +6,9 @@ _default:
 
 # Sync Go modules
 tidy:
-    cd cli && go mod tidy
     go mod tidy
     go work sync
+    @echo "All modules synced, Go workspace ready!"
 
 # CLI local run wrapper
 cli *args:
@@ -18,12 +18,12 @@ cli *args:
 test:
     @echo "Running unit tests!"
     go clean -testcache
-    go test -cover ./cli/...
+    go test -cover ./...
 
 # Run coverage and open a report
 view-coverage:
     go clean -testcache
-    go test -coverpkg="./cli/..." -coverprofile="coverage.out" -covermode="count" ./cli/...
+    go test -coverpkg="./..." -coverprofile="coverage.out" -covermode="count" ./...
     go tool cover -html="coverage.out" -o coverage.html
     xdg-open coverage.html
 

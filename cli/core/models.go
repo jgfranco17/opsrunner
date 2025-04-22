@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"cli/outputs"
+	"gtithub.com/jgfranco17/opsrunner/cli/outputs"
 )
 
 type TestResult struct {

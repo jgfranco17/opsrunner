@@ -4,9 +4,9 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"cli/core"
-	"cli/executor"
-	"cli/logging"
+	"gtithub.com/jgfranco17/opsrunner/cli/core"
+	"gtithub.com/jgfranco17/opsrunner/cli/executor"
+	"gtithub.com/jgfranco17/opsrunner/cli/logging"
 )
 
 const (

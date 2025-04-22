@@ -2,8 +2,9 @@ package core
 
 import (
 	"bytes"
-	"cli/runner"
 	"testing"
+
+	"gtithub.com/jgfranco17/opsrunner/cli/runner"
 
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"

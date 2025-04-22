@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"cli/runner"
+	"gtithub.com/jgfranco17/opsrunner/cli/runner"
 )
 
 type ShellExecutor interface {

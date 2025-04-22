@@ -1,11 +1,12 @@
 package runner
 
 import (
-	"cli/outputs"
 	"context"
 	"fmt"
 	"os"
 	"time"
+
+	"gtithub.com/jgfranco17/opsrunner/cli/outputs"
 
 	"gopkg.in/yaml.v3"
 )
