@@ -11,7 +11,7 @@ tidy:
 
 # CLI local run wrapper
 cli *args:
-    @go run main.go {{ args }}
+    @go run . {{ args }}
 
 # Run all BDD tests
 test:
