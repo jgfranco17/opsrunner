@@ -7,7 +7,6 @@ _default:
 # Sync Go modules
 tidy:
     go mod tidy
-    go work sync
     @echo "All modules synced, Go workspace ready!"
 
 # CLI local run wrapper
