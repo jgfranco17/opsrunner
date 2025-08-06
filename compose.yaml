@@ -1,0 +1,6 @@
+services:
+  opsrunner-cli:
+    container_name: opsrunner-cli
+    build:
+      context: .
+      dockerfile: Dockerfile
