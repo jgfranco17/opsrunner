@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
-	"time"
 
 	"gtithub.com/jgfranco17/opsrunner/cli/executor"
 	"gtithub.com/jgfranco17/opsrunner/cli/logging"
@@ -42,36 +40,8 @@ func Load(r io.Reader) (*ProjectDefinition, error) {
 type Codebase struct {
 	Language     string    `yaml:"language"`
 	Dependencies string    `yaml:"dependencies,omitempty"`
-	Test         Operation `yaml:"test,omitempty"`
+	Install      Operation `yaml:"install,omitempty"`
 	Build        Operation `yaml:"build,omitempty"`
-}
-
-// Install installs the codebase dependencies based on the defined language.
-func (c *Codebase) Install(ctx context.Context, executor ShellExecutor) error {
-	logger := logging.FromContext(ctx)
-	if c.Language == "" {
-		return fmt.Errorf("codebase language is not defined")
-	}
-	switch strings.ToLower(c.Language) {
-	case "go":
-		logger.Debug("Running Go installation steps")
-		result, err := executor.Exec(ctx, "go mod tidy")
-		if err != nil {
-			return fmt.Errorf("failed to install Go dependencies: %w", err)
-		}
-		result.PrintStdOut()
-	case "python":
-		logger.Debug("Running Python installation steps")
-		pipCommand := fmt.Sprintf("pip install -r %s", c.Dependencies)
-		result, err := executor.Exec(ctx, pipCommand)
-		if err != nil {
-			return fmt.Errorf("failed to install Go dependencies: %w", err)
-		}
-		result.PrintStdOut()
-	default:
-		return fmt.Errorf("unsupported codebase language: %s", c.Language)
-	}
-	return nil
 }
 
 type Operation struct {
@@ -95,7 +65,6 @@ func (op *Operation) Run(ctx context.Context, executor ShellExecutor) error {
 	}
 	executor.AddEnv(env)
 
-	startTime := time.Now()
 	var failedSteps []string
 	for idx, step := range op.Steps {
 		fmt.Printf("[%d] %s\n", idx+1, step)
@@ -113,11 +82,9 @@ func (op *Operation) Run(ctx context.Context, executor ShellExecutor) error {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", result.Stderr)
 		}
 	}
-	duration := time.Since(startTime)
 	outputs.PrintTerminalWideLine("=")
 	if len(failedSteps) > 0 {
 		return fmt.Errorf("failed to run steps: %v", failedSteps)
 	}
-	outputs.PrintColoredMessage("green", "Ran %d tasks in %d ms", len(op.Steps), duration.Milliseconds())
 	return nil
 }

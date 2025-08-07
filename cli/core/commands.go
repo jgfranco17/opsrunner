@@ -7,7 +7,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"gtithub.com/jgfranco17/opsrunner/cli/build"
 	"gtithub.com/jgfranco17/opsrunner/cli/config"
 	"gtithub.com/jgfranco17/opsrunner/cli/executor"
 	"gtithub.com/jgfranco17/opsrunner/cli/logging"
@@ -35,14 +34,14 @@ func GetBuildCommand(shellExecutor BashExecutor) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed to open file %s: %w", filePath, err)
 			}
-			config, err := config.Load(contents)
+			cfg, err := config.Load(contents)
 			if err != nil {
 				return fmt.Errorf("failed to load config from file: %w", err)
 			}
-			opts := &build.Options{
+			opts := &config.BuildOptions{
 				NoInstall: noInstall,
 			}
-			if err := build.Exec(ctx, shellExecutor, config, opts); err != nil {
+			if err := config.Build(ctx, shellExecutor, cfg, opts); err != nil {
 				return fmt.Errorf("build failed: %w", err)
 			}
 			return nil
@@ -52,24 +51,5 @@ func GetBuildCommand(shellExecutor BashExecutor) *cobra.Command {
 	}
 	cmd.Flags().StringVarP(&filePath, "file", "f", ".opsrunner.yaml", "OpsRunner definition file")
 	cmd.Flags().BoolVar(&noInstall, "no-install", false, "Install codebase dependencies before building")
-	return cmd
-}
-
-func GetGenerateDocsCommand(rootCmd *cobra.Command) *cobra.Command {
-	var outputDirPath string
-	cmd := &cobra.Command{
-		Use:   "docs",
-		Short: "Generate CLI documentation",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := GenerateDocs(rootCmd, outputDirPath); err != nil {
-				return fmt.Errorf("could not generate CLI docs: %w", err)
-			}
-			return nil
-		},
-		Hidden:        true,
-		SilenceUsage:  true,
-		SilenceErrors: true,
-	}
-	cmd.Flags().StringVarP(&outputDirPath, "output", "o", "docs", "Output directory")
 	return cmd
 }

@@ -1,31 +1,27 @@
-package build
+package config
 
 import (
 	"context"
 	"fmt"
+	"time"
 
-	"gtithub.com/jgfranco17/opsrunner/cli/config"
-	"gtithub.com/jgfranco17/opsrunner/cli/executor"
 	"gtithub.com/jgfranco17/opsrunner/cli/logging"
 )
 
-type Executor interface {
-	Exec(ctx context.Context, command string) (executor.Result, error)
-}
-
-type Options struct {
+type BuildOptions struct {
 	NoInstall bool
 }
 
-func Exec(ctx context.Context, shellExecutor config.ShellExecutor, config *config.ProjectDefinition, opts *Options) error {
+func Build(ctx context.Context, shellExecutor ShellExecutor, config *ProjectDefinition, opts *BuildOptions) error {
 	logger := logging.FromContext(ctx)
+	startTime := time.Now()
 
 	if opts == nil {
-		opts = &Options{}
+		opts = &BuildOptions{}
 	}
 	if !opts.NoInstall {
 		logger.Debug("Installing codebase dependencies")
-		if err := config.Codebase.Install(ctx, shellExecutor); err != nil {
+		if err := config.Codebase.Install.Run(ctx, shellExecutor); err != nil {
 			return fmt.Errorf("failed to install codebase dependencies: %w", err)
 		}
 	} else {
@@ -34,9 +30,10 @@ func Exec(ctx context.Context, shellExecutor config.ShellExecutor, config *confi
 	if len(config.Codebase.Build.Steps) == 0 {
 		logger.Warn("No build steps defined in the configuration.")
 	}
-	err := config.Codebase.Build.Run(ctx, shellExecutor)
-	if err != nil {
+	if err := config.Codebase.Build.Run(ctx, shellExecutor); err != nil {
 		return fmt.Errorf("failed to run build steps: %w", err)
 	}
+	duration := time.Since(startTime)
+	logger.Infof("Build completed successfully in %dms", duration.Milliseconds())
 	return nil
 }
