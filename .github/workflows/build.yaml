@@ -19,9 +19,13 @@ jobs:
       - name: Run setup
         uses: ./.github/actions/setup-workspace
 
-      - name: Run tests
+      - name: Run unit tests
         run: |
           just test
+
+      - name: Run BDD tests
+        run: |
+          just bdd-parallel
 
   build:
     runs-on: ubuntu-latest

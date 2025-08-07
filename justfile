@@ -13,18 +13,50 @@ tidy:
 cli *args:
     @go run main.go {{ args }}
 
-# Execute unit tests
+# Run all BDD tests
 test:
     @echo "Running unit tests!"
     go clean -testcache
     go test -cover ./...
 
-# Run coverage and open a report
-view-coverage:
-    go clean -testcache
+# Run specific test category
+bdd category="acceptance":
+    #!/usr/bin/env bash
+    echo "Running {{ category }} tests..."
+    if ! command -v ginkgo &> /dev/null; then
+        echo "Ginkgo CLI not found."
+        echo "Install with: go install github.com/onsi/ginkgo/v2/ginkgo@latest"
+        echo "After installation, ensure that GOPATH is on your PATH."
+    fi
+    case "{{ category }}" in
+        "integration")
+            ginkgo -r -v ./tests/integration/...
+            ;;
+        "system")
+            ginkgo -r -v ./tests/system/...
+            ;;
+        "acceptance")
+            ginkgo -r -v ./tests/acceptance/...
+            ;;
+        *)
+            echo "Unknown test category: {{ category }}"
+            echo "Available categories: unit, integration, system, acceptance"
+            exit 1
+            ;;
+    esac
+
+# Run tests with coverage
+test-coverage:
+    #!/usr/bin/env bash
     go test -coverpkg="./..." -coverprofile="coverage.out" -covermode="count" ./...
     go tool cover -html="coverage.out" -o coverage.html
     xdg-open coverage.html
+
+# Run tests in parallel
+bdd-parallel:
+    #!/usr/bin/env bash
+    echo "Running tests in parallel..."
+    ginkgo -r -v -p ./tests/...
 
 # Build CLI binary
 build-bin:
