@@ -20,6 +20,7 @@ type BashExecutor interface {
 
 func GetBuildCommand(shellExecutor BashExecutor) *cobra.Command {
 	var filePath string
+	var noInstall bool
 	cmd := &cobra.Command{
 		Use:   "build",
 		Short: "Run the build operations",
@@ -38,7 +39,10 @@ func GetBuildCommand(shellExecutor BashExecutor) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed to load config from file: %w", err)
 			}
-			if err := build.Exec(ctx, shellExecutor, config); err != nil {
+			opts := &build.Options{
+				NoInstall: noInstall,
+			}
+			if err := build.Exec(ctx, shellExecutor, config, opts); err != nil {
 				return fmt.Errorf("build failed: %w", err)
 			}
 			return nil
@@ -47,6 +51,7 @@ func GetBuildCommand(shellExecutor BashExecutor) *cobra.Command {
 		SilenceErrors: true,
 	}
 	cmd.Flags().StringVarP(&filePath, "file", "f", ".opsrunner.yaml", "OpsRunner definition file")
+	cmd.Flags().BoolVar(&noInstall, "no-install", false, "Install codebase dependencies before building")
 	return cmd
 }
 

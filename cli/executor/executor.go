@@ -3,6 +3,7 @@ package executor
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"os"
 	"os/exec"
 	"syscall"
@@ -12,6 +13,18 @@ type Result struct {
 	Stdout   string
 	Stderr   string
 	ExitCode int
+}
+
+func (r *Result) PrintStdOut() {
+	if r.Stdout != "" {
+		_, _ = fmt.Fprintf(os.Stdout, "%s\n", r.Stdout)
+	}
+}
+
+func (r *Result) PrintStdErr() {
+	if r.Stderr != "" {
+		_, _ = fmt.Fprintf(os.Stderr, "%s\n", r.Stderr)
+	}
 }
 
 type DefaultExecutor struct {

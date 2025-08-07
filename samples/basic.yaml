@@ -6,6 +6,7 @@ description: A simple CLI tool to run tasks defined in a YAML configuration file
 repo_url: www.github.com/jgfranco/opsrunner
 codebase:
   language: go
+  dependencies: go.mod
   build:
     fail_fast: true
     env:

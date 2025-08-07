@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 	"time"
 
 	"gtithub.com/jgfranco17/opsrunner/cli/executor"
@@ -39,8 +40,38 @@ func Load(r io.Reader) (*ProjectDefinition, error) {
 }
 
 type Codebase struct {
-	Test  Operation `yaml:"test,omitempty"`
-	Build Operation `yaml:"build,omitempty"`
+	Language     string    `yaml:"language"`
+	Dependencies string    `yaml:"dependencies,omitempty"`
+	Test         Operation `yaml:"test,omitempty"`
+	Build        Operation `yaml:"build,omitempty"`
+}
+
+// Install installs the codebase dependencies based on the defined language.
+func (c *Codebase) Install(ctx context.Context, executor ShellExecutor) error {
+	logger := logging.FromContext(ctx)
+	if c.Language == "" {
+		return fmt.Errorf("codebase language is not defined")
+	}
+	switch strings.ToLower(c.Language) {
+	case "go":
+		logger.Debug("Running Go installation steps")
+		result, err := executor.Exec(ctx, "go mod tidy")
+		if err != nil {
+			return fmt.Errorf("failed to install Go dependencies: %w", err)
+		}
+		result.PrintStdOut()
+	case "python":
+		logger.Debug("Running Python installation steps")
+		pipCommand := fmt.Sprintf("pip install -r %s", c.Dependencies)
+		result, err := executor.Exec(ctx, pipCommand)
+		if err != nil {
+			return fmt.Errorf("failed to install Go dependencies: %w", err)
+		}
+		result.PrintStdOut()
+	default:
+		return fmt.Errorf("unsupported codebase language: %s", c.Language)
+	}
+	return nil
 }
 
 type Operation struct {
@@ -55,10 +86,12 @@ func (op *Operation) Run(ctx context.Context, executor ShellExecutor) error {
 
 	env := os.Environ()
 	if len(op.Env) > 0 {
+		envsAdded := []string{}
 		for k, v := range op.Env {
 			env = append(env, fmt.Sprintf("%s=%s", k, v))
+			envsAdded = append(envsAdded, k)
 		}
-		logger.Tracef("Loading additional %d additional environment variable(s): %v", len(op.Env), op.Env)
+		logger.Tracef("Loading additional %d additional environment variable(s): %v", len(op.Env), envsAdded)
 	}
 	executor.AddEnv(env)
 
