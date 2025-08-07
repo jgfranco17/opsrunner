@@ -4,15 +4,13 @@ name: OpsRunner
 version: 0.1.0
 description: A simple CLI tool to run tasks defined in a YAML configuration file.
 repo_url: www.github.com/jgfranco/opsrunner
-
-# Test steps, run before build
-test:
-  category: test
-  env:
-    IS_TEST: "true"
-  steps:
-    - ls -la
-    - echo "Hello World!"
-
-# Build steps, assembles the project
-build:
+codebase:
+  language: go
+  build:
+    fail_fast: true
+    env:
+      IS_TEST: "true"
+    steps:
+      - ls -la
+      - sleep 1
+      - echo "Hello World!"

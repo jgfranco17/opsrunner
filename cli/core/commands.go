@@ -13,11 +13,12 @@ import (
 	"gtithub.com/jgfranco17/opsrunner/cli/logging"
 )
 
-type Executor interface {
-	Run(ctx context.Context, name string, args ...string) (executor.Result, error)
+type BashExecutor interface {
+	Exec(ctx context.Context, command string) (executor.Result, error)
+	AddEnv(env []string)
 }
 
-func GetBuildCommand(shellExecutor Executor) *cobra.Command {
+func GetBuildCommand(shellExecutor BashExecutor) *cobra.Command {
 	var filePath string
 	cmd := &cobra.Command{
 		Use:   "build",
@@ -37,11 +38,9 @@ func GetBuildCommand(shellExecutor Executor) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed to load config from file: %w", err)
 			}
-			result, err := build.Run(ctx, shellExecutor, config)
-			if err != nil {
+			if err := build.Exec(ctx, shellExecutor, config); err != nil {
 				return fmt.Errorf("build failed: %w", err)
 			}
-			logger.Infof("Build completed successfully with exit code %d", result.ExitCode)
 			return nil
 		},
 		SilenceUsage:  true,

@@ -3,6 +3,7 @@ package executor
 import (
 	"bytes"
 	"context"
+	"os"
 	"os/exec"
 	"syscall"
 )
@@ -13,12 +14,14 @@ type Result struct {
 	ExitCode int
 }
 
-type DefaultExecutor struct{}
+type DefaultExecutor struct {
+	Env []string
+}
 
-func (c *DefaultExecutor) Run(ctx context.Context, name string, args ...string) (Result, error) {
+func (c *DefaultExecutor) Exec(ctx context.Context, command string) (Result, error) {
 	var stdoutBuf, stderrBuf bytes.Buffer
 
-	cmd := exec.CommandContext(ctx, name, args...)
+	cmd := exec.CommandContext(ctx, "bash", "-c", command)
 	cmd.Stdout = &stdoutBuf
 	cmd.Stderr = &stderrBuf
 
@@ -45,4 +48,12 @@ func (c *DefaultExecutor) Run(ctx context.Context, name string, args ...string) 
 		Stderr:   stderrBuf.String(),
 		ExitCode: exitCode,
 	}, err
+}
+
+func (c *DefaultExecutor) AddEnv(envs []string) {
+	baseEnv := os.Environ()
+	if len(envs) > 0 {
+		baseEnv = append(baseEnv, envs...)
+	}
+	c.Env = baseEnv
 }

@@ -24,6 +24,8 @@ func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 func setOutputColorPerLevel(level string) color.Attribute {
 	var selectedColor color.Attribute
 	switch level {
+	case "TRACE":
+		selectedColor = color.FgMagenta
 	case "DEBUG":
 		selectedColor = color.FgCyan
 	case "INFO":

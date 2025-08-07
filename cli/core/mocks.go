@@ -34,9 +34,9 @@ func (m *MockExecutor) WithStep(command string, args string, mockReturnCode int,
 	return m
 }
 
-func (m *MockExecutor) Exec(ctx context.Context, name string, args string) (int, string, error) {
+func (m *MockExecutor) Exec(ctx context.Context, command string) (int, string, error) {
 	m.called = true
-	return -1, "", fmt.Errorf("undefined call: %s %s", name, args)
+	return -1, "", fmt.Errorf("undefined call: %s", command)
 }
 
 func (m *MockExecutor) IsCalled() bool {
