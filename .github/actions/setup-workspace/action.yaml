@@ -17,4 +17,3 @@ runs:
       shell: bash
       run: |
         just tidy
-        export PATH="$PATH:$(go env GOPATH)/bin"
