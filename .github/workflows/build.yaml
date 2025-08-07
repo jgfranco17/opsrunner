@@ -4,10 +4,10 @@ name: Build CI
 on:
   push:
     branches:
-      - "**"
+      - main
   pull_request:
     branches:
-      - main
+      - "**"
 
 jobs:
   test:
@@ -19,9 +19,14 @@ jobs:
       - name: Run setup
         uses: ./.github/actions/setup-workspace
 
-      - name: Run tests
+      - name: Run unit tests
         run: |
           just test
+
+      - name: Run BDD tests
+        run: |
+          go install github.com/onsi/ginkgo/v2/ginkgo
+          just bdd-parallel
 
   build:
     runs-on: ubuntu-latest
