@@ -23,11 +23,6 @@ jobs:
         run: |
           just test
 
-      - name: Run BDD tests
-        run: |
-          go install github.com/onsi/ginkgo/v2/ginkgo
-          just bdd-parallel
-
   build:
     runs-on: ubuntu-latest
     needs: test

@@ -1,0 +1,26 @@
+---
+name: BDD Testing
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "**"
+  schedule:
+    - cron: "0 15 * * *" # Midnight JST
+
+jobs:
+  run-bdd-tests:
+    name: Run BDD Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run setup
+        uses: ./.github/actions/setup-workspace
+
+      - name: Run Gingko tests
+        run: |
+          go install github.com/onsi/ginkgo/v2/ginkgo
+          just bdd-parallel
