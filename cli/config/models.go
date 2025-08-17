@@ -61,7 +61,7 @@ func (op *Operation) Run(ctx context.Context, executor ShellExecutor) error {
 			env = append(env, fmt.Sprintf("%s=%s", k, v))
 			envsAdded = append(envsAdded, k)
 		}
-		logger.Tracef("Loading additional %d additional environment variable(s): %v", len(op.Env), envsAdded)
+		logger.Infof("Loading additional %d additional environment variable(s): %v", len(op.Env), envsAdded)
 	}
 	executor.AddEnv(env)
 
