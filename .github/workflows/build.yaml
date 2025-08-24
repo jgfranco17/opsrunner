@@ -47,7 +47,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-output
+          name: artifacts
           path: ./opsrunner
 
   integration:
@@ -62,12 +62,12 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: build-output
-          path: ./opsrunner
+          name: opsrunner
+          path: .
 
       - name: Run binary
         run: |
-          ./opsrunner -vv build -f samples/basic.yaml | tee output.txt
+          ./opsrunner-cli -vv build -f samples/basic.yaml | tee output.txt
 
       - name: Create test summary
         if: always()
