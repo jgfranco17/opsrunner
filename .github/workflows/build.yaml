@@ -67,6 +67,7 @@ jobs:
 
       - name: Run binary
         run: |
+          chmod +x ./opsrunner
           ./opsrunner -vv build -f samples/basic.yaml | tee output.txt
 
       - name: Create test summary
