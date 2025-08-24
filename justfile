@@ -70,7 +70,7 @@ build-bin version="0.0.0-dev":
 
 # Build the Docker image
 docker-build:
-    docker build --build-arg VERSION=0.0.0-img --no-cache -t opsrunner:dev .
+    docker build --build-arg CLI_VERSION=0.0.0-img --no-cache -t opsrunner:dev .
     @echo "Built OpsRunner image successfully!"
 
 # Generate CLI documentation
