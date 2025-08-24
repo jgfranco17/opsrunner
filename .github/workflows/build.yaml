@@ -47,7 +47,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: artifacts
+          name: opsrunner
           path: ./opsrunner
 
   integration:
@@ -67,10 +67,10 @@ jobs:
 
       - name: Run binary
         run: |
-          ./opsrunner-cli -vv build -f samples/basic.yaml | tee output.txt
+          ./opsrunner -vv build -f samples/basic.yaml | tee output.txt
 
       - name: Create test summary
-        if: always()
+        if: success()
         run: |
           echo "# OpsRunner CLI: Integration Testing Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
