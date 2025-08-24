@@ -59,12 +59,14 @@ bdd-parallel:
     ginkgo -r -v -p ./tests/...
 
 # Build CLI binary
-build-bin:
+build-bin version="0.0.0-dev":
     #!/usr/bin/env bash
+    BIN_NAME="opsrunner"
     echo "Building {{ PROJECT_NAME }} binary..."
     go mod download all
     VERSION=$(jq -r .version specs.json)
-    CGO_ENABLED=0 GOOS=linux go build -ldflags="-X main.version=${VERSION}" -o ./{{ PROJECT_NAME }} main.go
+    CGO_ENABLED=0 GOOS=linux go build -ldflags="-X main.version=${VERSION}" -o "./${BIN_NAME}" main.go
+    chmod +x "./${BIN_NAME}"
     echo "Built binary for {{ PROJECT_NAME }} ${VERSION} successfully!"
 
 # Build the Docker image

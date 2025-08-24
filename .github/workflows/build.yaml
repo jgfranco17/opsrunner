@@ -37,13 +37,7 @@ jobs:
 
       - name: Build binary
         run: |
-          just tidy
-          go mod download all
-          CGO_ENABLED=0 GOOS=linux go build \
-            -ldflags="-X main.version=0.0.0-ci" \
-            -o ./opsrunner \
-            main.go
-          chmod +x ./opsrunner
+          just build-bin "0.0.0-ci"
 
       - name: Run binary
         run: |

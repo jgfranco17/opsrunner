@@ -1,5 +1,5 @@
 ---
-name: "Setup Go Workspace"
+name: "Setup Project Workspace"
 description: "Configure Go and prepare the workspace"
 
 runs:
