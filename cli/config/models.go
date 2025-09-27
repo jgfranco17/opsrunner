@@ -8,7 +8,7 @@ import (
 
 	"github.com/jgfranco17/dev-tooling-go/logging"
 	"github.com/jgfranco17/opsrunner/cli/executor"
-	"github.com/jgfranco17/opsrunner/cli/outputs"
+	"github.com/jgfranco17/opsrunner/internal/outputs"
 
 	"gopkg.in/yaml.v3"
 )
