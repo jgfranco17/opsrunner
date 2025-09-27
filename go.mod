@@ -1,14 +1,13 @@
-module gtithub.com/jgfranco17/opsrunner
+module github.com/jgfranco17/opsrunner
 
-go 1.23.0
-
-toolchain go1.23.2
+go 1.24.3
 
 require (
 	github.com/fatih/color v1.18.0
+	github.com/jgfranco17/dev-tooling-go v0.0.3
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.9.1
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	golang.org/x/term v0.32.0
 	gopkg.in/yaml.v3 v3.0.1
 )

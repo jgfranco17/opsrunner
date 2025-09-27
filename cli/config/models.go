@@ -6,9 +6,9 @@ import (
 	"io"
 	"os"
 
-	"gtithub.com/jgfranco17/opsrunner/cli/executor"
-	"gtithub.com/jgfranco17/opsrunner/cli/logging"
-	"gtithub.com/jgfranco17/opsrunner/cli/outputs"
+	"github.com/jgfranco17/dev-tooling-go/logging"
+	"github.com/jgfranco17/opsrunner/cli/executor"
+	"github.com/jgfranco17/opsrunner/cli/outputs"
 
 	"gopkg.in/yaml.v3"
 )
