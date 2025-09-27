@@ -1,9 +1,9 @@
 package core
 
 import (
+	"github.com/jgfranco17/dev-tooling-go/logging"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"gtithub.com/jgfranco17/opsrunner/cli/logging"
 )
 
 var (
@@ -34,8 +34,8 @@ func NewCommandRegistry(name string, description string, version string) *Comman
 			default:
 				level = logrus.WarnLevel
 			}
-			logger := logging.New(level)
-			ctx := logging.AddToContext(cmd.Context(), logger)
+			logger := logging.New(cmd.ErrOrStderr(), level)
+			ctx := logging.WithContext(cmd.Context(), logger)
 			cmd.SetContext(ctx)
 		},
 	}

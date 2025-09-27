@@ -7,9 +7,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"gtithub.com/jgfranco17/opsrunner/cli/config"
-	"gtithub.com/jgfranco17/opsrunner/cli/executor"
-	"gtithub.com/jgfranco17/opsrunner/cli/logging"
+	"github.com/jgfranco17/dev-tooling-go/logging"
+	"github.com/jgfranco17/opsrunner/cli/config"
+	"github.com/jgfranco17/opsrunner/cli/executor"
 )
 
 type BashExecutor interface {

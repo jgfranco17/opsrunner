@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"gtithub.com/jgfranco17/opsrunner/cli/logging"
+	"github.com/jgfranco17/dev-tooling-go/logging"
 )
 
 type BuildOptions struct {
